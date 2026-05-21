@@ -5,25 +5,27 @@
   "schema": {
     "type": "object",
     "properties": {
+      "name": {
+        "title": "Name",
+        "type": "string",
+        "default": "Modern Forms Fans"
+      },
       "autoDiscover": {
         "title": "Auto discover",
         "description": "Disable automatic discovery of fans on your local network.",
         "type": "boolean",
-        "default": true,
-        "required": false
+        "default": true
       },
       "pollingInterval": {
         "title": "Polling Interval",
         "description": "Defines how often (in seconds) fans are queried for state on the network.",
         "type": "number",
-        "default": 5,
-        "required": false
+        "default": 5
       },
       "mqttUrl": {
         "title": "MQTT Server URL",
         "description": "Configure MQTT server for switch notifications",
-        "type": "string",
-        "required": false
+        "type": "string"
       },
       "fans": {
         "title": "Fans",
@@ -36,21 +38,19 @@
             "ip": {
               "title": "IP",
               "type": "string",
-              "required": true,
               "format": "ipv4"
             },
             "light": {
               "title": "Light",
               "type": "boolean",
-              "required": false,
               "default": true
             },
             "switch": {
               "title": "Switch Topic",
-              "type": "string",
-              "required": false
+              "type": "string"
             }
-          }
+          },
+          "required": ["ip"]
         }
       }
     }

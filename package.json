@@ -1,21 +1,19 @@
 {
   "displayName": "Modern Forms Fans",
   "name": "homebridge-modern-forms-fans-v2",
-  "version": "1.1.9",
+  "version": "1.2.0",
   "description": "Add Modern Forms fans to your Home app using Homebridge.",
   "license": "Apache-2.0",
+  "homepage": "https://github.com/vhvhxksc4t-sudo/hb-modern-forms-fans-2#readme",
   "repository": {
     "type": "git",
-    "url": "git://github.com/vhvhxksc4t-sudo/hb-modern-forms-fans-2.git"
+    "url": "https://github.com/vhvhxksc4t-sudo/hb-modern-forms-fans-2"
   },
   "bugs": {
     "url": "https://github.com/vhvhxksc4t-sudo/hb-modern-forms-fans-2/issues"
   },
   "engines": {
     "node": ">=18.0.0",
-    "homebridge": "^1.3.0 || ^2.0.0"
-  },
-  "peerDependencies": {
     "homebridge": "^1.3.0 || ^2.0.0"
   },
   "main": "dist/index.js",
@@ -33,16 +31,17 @@
   "dependencies": {
     "@network-utils/arp-lookup": "^1.3.4",
     "axios": "^1.7.0",
-    "get-ip-range": "^2.1.0",
+    "get-ip-range": "^4.0.1",
     "memoizee": "^0.4.14",
     "mqtt": "^5.3.5",
-    "network": "^0.5.0",
-    "network-calculator": "^2.0.1",
+    "network": "^0.7.0",
+    "network-calculator": "^1.2.0",
     "node-arp": "^1.0.6",
     "ping": "^0.2.3",
     "rxjs": "^7.8.0"
   },
   "devDependencies": {
+    "@types/ip": "^1.1.3",
     "@types/memoizee": "^0.4.4",
     "@types/node": "^22.0.0",
     "@types/ping": "^0.2.0",
