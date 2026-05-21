@@ -122,6 +122,9 @@ The plugin subscribes to `stat/<switch>/RESULT` and publishes to `cmnd/<switch>/
 
 ## Changelog
 
+### 1.1.5
+- Fix crash after accessory registration: revert tsconfig target to ES2020 — ES2022 native class field semantics run field initializers before constructor parameter properties are assigned, breaking accessories that reference `this.accessory` in field initializers
+
 ### 1.1.4
 - Fix crash on network scan: filter ping to alive hosts only, add `catchError` on ARP lookups, add error handlers on subscriptions (rxjs 7 unhandled errors crash the process)
 
