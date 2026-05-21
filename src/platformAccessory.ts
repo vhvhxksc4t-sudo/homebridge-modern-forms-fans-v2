@@ -71,7 +71,7 @@ export class ModernFormsPlatformAccessory {
             const data = JSON.parse(message.toString());
             this.log(`Message: ${JSON.stringify(data)}`);
             if (data.Button1?.Action === 'SINGLE') {
-              this.log('Toggle fan on from MQTT');
+              this.platform.log.info(`[${this.device().ip}] Toggle fan via MQTT switch`);
               this.states.fanOn = !this.states.fanOn;
               this.sendUpdate();
             }
@@ -94,11 +94,11 @@ export class ModernFormsPlatformAccessory {
 
   // HELPERS
   poll() {
-    this.platform.log.info(`Requesting updates from ${this.device().clientId} at IP ${this.device().ip}...`);
+    this.platform.log.debug(`Requesting updates from ${this.device().clientId} at IP ${this.device().ip}...`);
     this.request({ queryDynamicShadowData: 1 })
       .then(this.updateStates.bind(this))
       .catch(error => {
-        this.platform.log.info(`Failed to get status of ${this.device().clientId} at IP ${this.device().ip}: ${error.message}`);
+        this.platform.log.warn(`Failed to get status of ${this.device().clientId} at IP ${this.device().ip}: ${error.message}`);
       })
       .finally(() => {
         setTimeout(this.poll.bind(this), (this.platform.config.pollingInterval || 5) * 1000);
@@ -106,7 +106,7 @@ export class ModernFormsPlatformAccessory {
   }
 
   updateStates(data : ResponsePayload) {
-    this.platform.log.info(`Updating states for ${this.device().clientId}: ${JSON.stringify(data)}`);
+    this.platform.log.debug(`Updating states for ${this.device().clientId}: ${JSON.stringify(data)}`);
     this.states = data;
     this.fanService.getCharacteristic(this.platform.Characteristic.On).updateValue(data.fanOn);
     this.updateLed();
@@ -127,10 +127,10 @@ export class ModernFormsPlatformAccessory {
   }
 
   sendUpdate() {
-    this.platform.log.info(`Sending update to ${this.device().clientId}...`);
+    this.platform.log.debug(`Sending update to ${this.device().clientId}...`);
     this.request(this.states)
       .then(this.updateStates.bind(this))
-      .catch((error) => this.platform.log.info(`Failed to update fan states: ${error.message}`));
+      .catch((error) => this.platform.log.error(`Failed to update fan states: ${error.message}`));
   }
 
   sendDelayedUpdate() {
@@ -138,7 +138,7 @@ export class ModernFormsPlatformAccessory {
       clearTimeout(this.updateTimer);
     }
 
-    this.platform.log.info(`Staging update to ${this.device().clientId}...`);
+    this.platform.log.debug(`Staging update to ${this.device().clientId}...`);
     this.updateTimer = setTimeout(this.sendUpdate.bind(this), 500);
   }
 
@@ -147,7 +147,7 @@ export class ModernFormsPlatformAccessory {
   };
 
   log = (...args: unknown[]) => {
-    this.platform.log.info(`[${this.device().ip}]`, ...args);
+    this.platform.log.debug(`[${this.device().ip}]`, ...args);
   };
 
   // FAN GETTERS / SETTERS
