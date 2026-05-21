@@ -4,7 +4,7 @@ import { bindNodeCallback, of, partition, from, concat, EMPTY } from 'rxjs';
 import { tap, mergeMap, filter, share, map, distinct, catchError } from 'rxjs/operators';
 import ping from 'ping';
 import calculateNetwork from 'network-calculator';
-import getIpRange = require('get-ip-range');
+import getIpRange from 'get-ip-range';
 import arp from 'node-arp';
 
 import { PLATFORM_NAME, PLUGIN_NAME } from './settings';
