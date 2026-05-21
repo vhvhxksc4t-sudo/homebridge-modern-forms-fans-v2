@@ -1,16 +1,16 @@
 {
   "displayName": "Modern Forms Fans",
   "name": "homebridge-modern-forms-fans-v2",
-  "version": "1.2.5",
+  "version": "1.2.6",
   "description": "Add Modern Forms fans to your Home app using Homebridge.",
   "license": "Apache-2.0",
-  "homepage": "https://github.com/vhvhxksc4t-sudo/hb-modern-forms-fans-2#readme",
+  "homepage": "https://github.com/vhvhxksc4t-sudo/homebridge-modern-forms-fans-v2#readme",
   "repository": {
     "type": "git",
-    "url": "https://github.com/vhvhxksc4t-sudo/hb-modern-forms-fans-2"
+    "url": "https://github.com/vhvhxksc4t-sudo/homebridge-modern-forms-fans-v2"
   },
   "bugs": {
-    "url": "https://github.com/vhvhxksc4t-sudo/hb-modern-forms-fans-2/issues"
+    "url": "https://github.com/vhvhxksc4t-sudo/homebridge-modern-forms-fans-v2/issues"
   },
   "engines": {
     "node": "^22.0.0 || ^24.0.0",
