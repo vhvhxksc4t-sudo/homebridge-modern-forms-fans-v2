@@ -122,6 +122,9 @@ The plugin subscribes to `stat/<switch>/RESULT` and publishes to `cmnd/<switch>/
 
 ## Changelog
 
+### 1.1.4
+- Fix crash on network scan: filter ping to alive hosts only, add `catchError` on ARP lookups, add error handlers on subscriptions (rxjs 7 unhandled errors crash the process)
+
 ### 1.1.2
 - Loosened `peerDependencies` to accept Homebridge 1.x and 2.x
 

@@ -1,7 +1,7 @@
 import { API, DynamicPlatformPlugin, Logger, PlatformAccessory, PlatformConfig, Service, Characteristic } from 'homebridge';
 import network from 'network';
 import { bindNodeCallback, of, partition, from, concat, EMPTY } from 'rxjs';
-import { tap, mergeMap, filter, share, map, distinct } from 'rxjs/operators';
+import { tap, mergeMap, filter, share, map, distinct, catchError } from 'rxjs/operators';
 import ping from 'ping';
 import calculateNetwork from 'network-calculator';
 import getIpRange from 'get-ip-range';
@@ -84,11 +84,13 @@ export class ModernFormsPlatform implements DynamicPlatformPlugin {
       map(int => calculateNetwork(int.ip_address ?? '192.168.0.1', int.netmask ?? '255.255.255.0')),
       map(network => network.network + '/' + network.bitmask),
       mergeMap(subnet => getIpRange(subnet)),
-      mergeMap(ip => ping.promise.probe(ip).then(() => ip)),
+      mergeMap(ip => ping.promise.probe(ip).then(res => res.alive ? ip : null).catch(() => null)),
+      filter((ip): ip is string => ip !== null),
       mergeMap(ip => getMAC(ip).pipe(
         map(([mac]) => mac?.toUpperCase() ?? ''),
         filter(mac => mac.startsWith('C8:93:46')),
         map(() => ({ ip: ip, light: true })),
+        catchError(() => EMPTY),
       )),
       tap(fan => this.log.debug('Found potential IP address from network and filtering by MAC vendor:', fan.ip)),
     );
@@ -113,18 +115,24 @@ export class ModernFormsPlatform implements DynamicPlatformPlugin {
       device => !device.existingAccessory,
     );
 
-    newDevices$.subscribe(({ uuid, fan, clientId }) => {
-      this.log.info('Adding new accessory:', clientId);
-      const accessory = new this.api.platformAccessory(clientId, uuid);
-      accessory.context.device = { uuid, ip: fan.ip, light: fan.light, switch: fan.switch, clientId };
-      new ModernFormsPlatformAccessory(this, accessory);
-      this.api.registerPlatformAccessories(PLUGIN_NAME, PLATFORM_NAME, [accessory]);
+    newDevices$.subscribe({
+      next: ({ uuid, fan, clientId }) => {
+        this.log.info('Adding new accessory:', clientId);
+        const accessory = new this.api.platformAccessory(clientId, uuid);
+        accessory.context.device = { uuid, ip: fan.ip, light: fan.light, switch: fan.switch, clientId };
+        new ModernFormsPlatformAccessory(this, accessory);
+        this.api.registerPlatformAccessories(PLUGIN_NAME, PLATFORM_NAME, [accessory]);
+      },
+      error: (err) => this.log.error('Error during device discovery:', err),
     });
 
-    existingDevices$.subscribe(({ uuid, fan, clientId, existingAccessory }) => {
-      this.log.info('Restoring existing accessory from cache:', clientId);
-      existingAccessory!.context.device = { uuid, ip: fan.ip, light: fan.light, switch: fan.switch, clientId };
-      new ModernFormsPlatformAccessory(this, existingAccessory!);
+    existingDevices$.subscribe({
+      next: ({ uuid, fan, clientId, existingAccessory }) => {
+        this.log.info('Restoring existing accessory from cache:', clientId);
+        existingAccessory!.context.device = { uuid, ip: fan.ip, light: fan.light, switch: fan.switch, clientId };
+        new ModernFormsPlatformAccessory(this, existingAccessory!);
+      },
+      error: (err) => this.log.error('Error during device discovery:', err),
     });
   }
 }
