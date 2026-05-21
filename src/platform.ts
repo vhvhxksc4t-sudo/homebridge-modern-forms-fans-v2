@@ -118,7 +118,7 @@ export class ModernFormsPlatform implements DynamicPlatformPlugin {
     newDevices$.subscribe({
       next: ({ uuid, fan, clientId }) => {
         this.log.info('Adding new accessory:', clientId);
-        const accessory = new this.api.platformAccessory(clientId, uuid);
+        const accessory = new this.api.platformAccessory(clientId.replace(/_/g, ' '), uuid);
         accessory.context.device = { uuid, ip: fan.ip, light: fan.light, switch: fan.switch, clientId };
         new ModernFormsPlatformAccessory(this, accessory);
         this.api.registerPlatformAccessories(PLUGIN_NAME, PLATFORM_NAME, [accessory]);

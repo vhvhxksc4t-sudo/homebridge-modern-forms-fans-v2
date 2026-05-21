@@ -25,6 +25,7 @@ export class ModernFormsPlatformAccessory {
     private readonly accessory: PlatformAccessory,
   ) {
       this.accessory.getService(this.platform.Service.AccessoryInformation)!
+        .setCharacteristic(this.platform.Characteristic.Name, this.device().clientId.replace(/_/g, ' '))
         .setCharacteristic(this.platform.Characteristic.Manufacturer, 'Modern Forms')
         .setCharacteristic(this.platform.Characteristic.Model, 'Unknown')
         .setCharacteristic(this.platform.Characteristic.SerialNumber, this.device().clientId);
