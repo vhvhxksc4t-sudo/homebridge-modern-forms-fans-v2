@@ -2,7 +2,7 @@
 
 Add support for [Modern Forms](https://modernforms.com) fans to HomeKit using Homebridge.
 
-> **This package (`hb-modern-forms-fans-2`) is a community fork updated for Node.js 18+ with Homebridge 1.x/2.x support.**
+> **This package (`homebridge-modern-forms-fans-v2`) is a community fork updated for Node.js 18+ with Homebridge 1.x/2.x support.**
 > Original plugin: [`homebridge-modern-forms-fans`](https://www.npmjs.com/package/homebridge-modern-forms-fans) by davidashman.
 
 ## Requirements
@@ -13,10 +13,10 @@ Add support for [Modern Forms](https://modernforms.com) fans to HomeKit using Ho
 ## Installation
 
 ```bash
-npm install -g hb-modern-forms-fans-2
+npm install -g homebridge-modern-forms-fans-v2
 ```
 
-Or via the [Homebridge UI](https://github.com/homebridge/homebridge-config-ui-x) — search for **hb-modern-forms-fans-2**.
+Or via the [Homebridge UI](https://github.com/homebridge/homebridge-config-ui-x) — search for **homebridge-modern-forms-fans-v2**.
 
 ## Setup
 
