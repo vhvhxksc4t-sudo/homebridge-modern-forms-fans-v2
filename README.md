@@ -120,6 +120,20 @@ Pairs a Tasmota-flashed wall switch with a fan so a single-press toggles the fan
 
 The plugin subscribes to `stat/<switch>/RESULT` and publishes to `cmnd/<switch>/LedPower`.
 
+## Migrating from homebridge-modern-forms-fans
+
+If you have the original [`homebridge-modern-forms-fans`](https://www.npmjs.com/package/homebridge-modern-forms-fans) installed:
+
+> **Before uninstalling the old plugin, note down any manual fan IP addresses from its config.** Uninstalling a Homebridge plugin removes its config entry — those IPs won't carry over automatically.
+
+1. Note any IPs listed under `fans` in the old plugin's config
+2. Install `homebridge-modern-forms-fans-v2` via the Homebridge UI
+3. Configure it with the same IPs
+4. Verify fans are discovered and working
+5. Uninstall `homebridge-modern-forms-fans`
+
+Homebridge will automatically migrate cached accessories to the new plugin name on first start.
+
 ## Changelog
 
 ### 1.1.5
