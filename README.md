@@ -1,20 +1,28 @@
 # Modern Forms Homebridge Plugin
 
-Add support for [Modern Forms](https://modernforms.com) fans to Homekit using Homebridge.
+Add support for [Modern Forms](https://modernforms.com) fans to HomeKit using Homebridge.
 
-## Prerequisites
+> **This package (`hb-modern-forms-fans-2`) is a community fork updated for Homebridge 2.0 and Node.js 18+.**
+> Original plugin: [`homebridge-modern-forms-fans`](https://www.npmjs.com/package/homebridge-modern-forms-fans) by davidashman.
 
-- Have [Homebridge](https://homebridge.io) setup
+## Requirements
+
+- [Homebridge](https://homebridge.io) **1.0 or later** (Homebridge 2.0 supported)
+- Node.js **18.0 or later**
+
+## Installation
+
+```bash
+npm install -g hb-modern-forms-fans-2
+```
+
+Or via the [Homebridge UI](https://github.com/homebridge/homebridge-config-ui-x) — search for **hb-modern-forms-fans-2**.
 
 ## Setup
 
-1. Add any fans you'd like to control to your home network.
-    1. Download the Modern Forms [iOS](https://apps.apple.com/us/app/modern-forms/id1425046298) or [Android](https://play.google.com/store/apps/details?id=com.WAC.PlayStore.ModernForms&hl=en_US) app.
-    1. Follow the instructions to pair your fan.
-    1. Verify your fans show up in the app and can be controlled.
-    1. Optionally, delete the app.
+1. Add your fans to your home network using the Modern Forms app ([iOS](https://apps.apple.com/us/app/modern-forms/id1425046298) / [Android](https://play.google.com/store/apps/details?id=com.WAC.PlayStore.ModernForms&hl=en_US)) and verify they respond in the app.
 
-1. Add the following to your Homebridge `config.json` under platforms.
+2. Add the platform to your Homebridge `config.json`:
 
     ```json
     {
@@ -22,14 +30,14 @@ Add support for [Modern Forms](https://modernforms.com) fans to Homekit using Ho
     }
     ```
 
-1. Verify your `config.json` looks similar to the following.
+3. Full example `config.json`:
 
     ```json
     {
         "bridge": {
-            "name": "Name",
+            "name": "Homebridge",
             "username": "XX:XX:XX:XX:XX:XX",
-            "port": 00000,
+            "port": 51826,
             "pin": "000-00-000"
         },
         "platforms": [
@@ -40,35 +48,95 @@ Add support for [Modern Forms](https://modernforms.com) fans to Homekit using Ho
     }
     ```
 
-1. You’re all set! Any fans you saw in the Modern Forms app should appear in the Home app automatically.
+4. Restart Homebridge. Fans on your network are discovered automatically and will appear in the Home app.
 
 ## Configuration
 
+### Auto-discovery (default)
+
+By default the plugin scans your network, pings every IP in your subnet, and filters by the Modern Forms MAC vendor prefix (`C8:93:46`). No additional configuration required.
+
 ### Specifying Fan IP Addresses
 
-If any of your fans are not automatically found, try specifiying their IP addresses in the following format.
+If a fan is not found automatically, add it explicitly:
 
 ```json
 {
     "platform": "ModernForms",
     "fans": [
+        { "ip": "192.168.1.10" },
+        { "ip": "192.168.1.11", "light": false }
+    ]
+}
+```
+
+| Field | Type | Default | Description |
+|-------|------|---------|-------------|
+| `ip` | string | — | IPv4 address of the fan (required) |
+| `light` | boolean | `true` | Expose the fan's light as a Lightbulb accessory |
+| `switch` | string | — | MQTT topic suffix for a Tasmota wall switch |
+
+### Disabling Auto-discovery
+
+Useful on large or segmented networks where the subnet scan is slow or unwanted. Requires manual `fans` entries.
+
+```json
+{
+    "platform": "ModernForms",
+    "autoDiscover": false,
+    "fans": [
+        { "ip": "192.168.1.10" }
+    ]
+}
+```
+
+### Polling Interval
+
+How often (in seconds) the plugin polls each fan for state updates. Default: `5`.
+
+```json
+{
+    "platform": "ModernForms",
+    "pollingInterval": 10
+}
+```
+
+### MQTT Wall Switch Integration
+
+Pairs a Tasmota-flashed wall switch with a fan so a single-press toggles the fan on/off and syncs the switch LED to fan state.
+
+```json
+{
+    "platform": "ModernForms",
+    "mqttUrl": "mqtt://192.168.1.2",
+    "fans": [
         {
-            "ip": "192.168.0.10"
-        },
-        {
-            "ip": "192.168.0.11"
+            "ip": "192.168.1.10",
+            "switch": "tasmota_switch_1"
         }
     ]
 }
 ```
 
-### Disabling Auto Discovery
+The plugin subscribes to `stat/<switch>/RESULT` and publishes to `cmnd/<switch>/LedPower`.
 
-If you would like to disable the automatic discovery of fans on your network, specify the following option. You will need to specify the IP address of your fans manually [as shown above](#specifying-fan-ip-addresses).
+## Changelog
 
-```json
-{
-    "platform": "ModernForms",
-    "autoDiscover": false
-}
-```
+### 1.1.2
+- Loosened `peerDependencies` to accept Homebridge 1.x and 2.x
+
+### 1.1.1
+- Upgraded `@typescript-eslint` to v8 for full TypeScript 5.x compatibility
+
+### 1.1.0
+- **Homebridge 2.0** support (`peerDependencies` updated)
+- Node.js minimum raised to **18.0**
+- `axios` updated 0.x → 1.x
+- `rxjs` updated 6.x → 7.x
+- TypeScript updated 4.x → 5.x; build target ES2022
+- ESLint updated 7 → 8, `@typescript-eslint` 3 → 8
+- CI matrix updated to Node 18 / 20 / 22 / 24
+
+## License
+
+[Apache-2.0](LICENSE)

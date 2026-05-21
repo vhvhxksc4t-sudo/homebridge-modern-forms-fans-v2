@@ -1,7 +1,7 @@
 import { API, DynamicPlatformPlugin, Logger, PlatformAccessory, PlatformConfig, Service, Characteristic } from 'homebridge';
 import network from 'network';
 import { bindNodeCallback, of, partition, from, concat, EMPTY } from 'rxjs';
-import { tap, mergeMap, filter, mapTo, share, map, distinct } from 'rxjs/operators';
+import { tap, mergeMap, filter, share, map, distinct } from 'rxjs/operators';
 import ping from 'ping';
 import calculateNetwork from 'network-calculator';
 import getIpRange from 'get-ip-range';
@@ -27,8 +27,8 @@ interface Config extends PlatformConfig {
 }
 
 export class ModernFormsPlatform implements DynamicPlatformPlugin {
-  public readonly Service: typeof Service = this.api.hap.Service;
-  public readonly Characteristic: typeof Characteristic = this.api.hap.Characteristic;
+  public readonly Service: typeof Service;
+  public readonly Characteristic: typeof Characteristic;
   public readonly accessories: PlatformAccessory[] = [];
   public readonly mqtt!: MqttClient;
 
@@ -37,6 +37,8 @@ export class ModernFormsPlatform implements DynamicPlatformPlugin {
     public readonly config: Config,
     public readonly api: API,
   ) {
+    this.Service = this.api.hap.Service;
+    this.Characteristic = this.api.hap.Characteristic;
     this.log.debug('Finished initializing platform:', this.config.name);
 
     if (this.config.mqttUrl) {
@@ -84,9 +86,9 @@ export class ModernFormsPlatform implements DynamicPlatformPlugin {
       mergeMap(subnet => getIpRange(subnet)),
       mergeMap(ip => ping.promise.probe(ip).then(() => ip)),
       mergeMap(ip => getMAC(ip).pipe(
-        map(mac => mac?.toUpperCase() ?? ''),
+        map(([mac]) => mac?.toUpperCase() ?? ''),
         filter(mac => mac.startsWith('C8:93:46')),
-        mapTo({ ip: ip, light: true }),
+        map(() => ({ ip: ip, light: true })),
       )),
       tap(fan => this.log.debug('Found potential IP address from network and filtering by MAC vendor:', fan.ip)),
     );

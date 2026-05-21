@@ -18,7 +18,7 @@ export class ModernFormsPlatformAccessory {
     lightOn: false,
     lightBrightness: 0,
     clientId: this.device().clientId,
-  }
+  };
 
   constructor(
     private readonly platform: ModernFormsPlatform,
@@ -144,11 +144,11 @@ export class ModernFormsPlatformAccessory {
 
   getStepWithoutGoingOver = (steps: number) => {
     return Math.floor(100 / steps * 1000) / 1000;
-  }
+  };
 
   log = (...args: unknown[]) => {
     this.platform.log.info(`[${this.device().ip}]`, ...args);
-  }
+  };
 
   // FAN GETTERS / SETTERS
 
@@ -171,8 +171,9 @@ export class ModernFormsPlatformAccessory {
 
   async setRotationSpeed(value: CharacteristicValue) {
     this.log('Set Fan Characteristic On ->', value);
-    this.states.fanOn = value > 0;
-    this.states.fanSpeed = Math.round(value as number / 100 * NUMBER_OF_FAN_SPEEDS);
+    const speed = value as number;
+    this.states.fanOn = speed > 0;
+    this.states.fanSpeed = Math.round(speed / 100 * NUMBER_OF_FAN_SPEEDS);
     this.sendDelayedUpdate();
   }
 
@@ -186,8 +187,9 @@ export class ModernFormsPlatformAccessory {
 
   async setBrightness(value: CharacteristicValue) {
     this.log('Set Characteristic Brightness -> ', value);
-    this.states.lightOn = value > 0;
-    this.states.lightBrightness = value as number;
+    const brightness = value as number;
+    this.states.lightOn = brightness > 0;
+    this.states.lightBrightness = brightness;
     this.sendDelayedUpdate();
   }
 }
