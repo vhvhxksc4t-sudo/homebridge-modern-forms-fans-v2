@@ -4,7 +4,7 @@ import { bindNodeCallback, of, partition, from, concat, EMPTY } from 'rxjs';
 import { tap, mergeMap, filter, share, map, distinct, catchError } from 'rxjs/operators';
 import ping from 'ping';
 import calculateNetwork from 'network-calculator';
-import getIpRange from 'get-ip-range';
+import { getIPRange } from 'get-ip-range';
 import arp from 'node-arp';
 
 import { PLATFORM_NAME, PLUGIN_NAME } from './settings';
@@ -83,7 +83,7 @@ export class ModernFormsPlatform implements DynamicPlatformPlugin {
       tap(() => this.log.debug('Searching network for Modern Forms fans')),
       map(int => calculateNetwork(int.ip_address ?? '192.168.0.1', int.netmask ?? '255.255.255.0')),
       map(network => network.network + '/' + network.bitmask),
-      mergeMap(subnet => getIpRange(subnet)),
+      mergeMap(subnet => getIPRange(subnet)),
       mergeMap(ip => ping.promise.probe(ip).then(res => res.alive ? ip : null).catch(() => null)),
       filter((ip): ip is string => ip !== null),
       mergeMap(ip => getMAC(ip).pipe(
