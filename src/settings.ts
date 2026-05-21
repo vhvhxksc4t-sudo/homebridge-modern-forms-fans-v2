@@ -6,4 +6,4 @@ export const PLATFORM_NAME = 'ModernFormsFans';
 /**
  * This must match the name of your plugin as defined the package.json
  */
-export const PLUGIN_NAME = 'homebridge-modern-forms-fans';
+export const PLUGIN_NAME = 'homebridge-modern-forms-fans-v2';
