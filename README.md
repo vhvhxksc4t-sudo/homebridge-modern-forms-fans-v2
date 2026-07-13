@@ -1,5 +1,7 @@
 # Modern Forms Homebridge Plugin
 
+[![verified-by-homebridge](https://img.shields.io/badge/homebridge-verified-blueviolet?color=%23491F59&style=for-the-badge&logoColor=%23FFFFFF&logo=homebridge)](https://github.com/homebridge/homebridge/wiki/Verified-Plugins)
+
 Add support for [Modern Forms](https://modernforms.com) fans to HomeKit using Homebridge.
 
 > **This package (`homebridge-modern-forms-fans-v2`) is a community fork updated for Node.js 18+ with Homebridge 1.x/2.x support.**
